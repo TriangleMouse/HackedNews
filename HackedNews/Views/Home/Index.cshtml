@@ -1,0 +1,70 @@
+﻿@model CategoryListViewModel
+
+
+<div class="album py-3 bg-white">
+
+    <h2 class="ml-2 mb-4 mt-2">@Localizer["LastNewsTitle"]</h2>
+
+    <div class="container">
+        <div class="row bg-body">
+            <div class="card-group">
+                @foreach (var News in Model.LastNews)
+                {
+                    <div class="col-md-4 d-flex align-items-stretch">
+                        <div class="card mb-4 shadow-lg">
+                            <a class=" btn h-100 btn-fix card-block text-left" asp-controller="News" asp-action="InfNews" asp-route-Newsid="@News.Id">
+                                <div class="container position-relative">
+                                    @if (News.Img_Load != null)
+                                     {
+                                           <img class="card-img-top" src= " data:image/jpeg; base64,@Convert.ToBase64String(News.Img_Load)" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@News.Img_Link" class="card-img-top"/>
+                                    }
+                                    
+                                    <div class="bg-white text-right">
+                                        <small class="text-muted ">
+                                            <span>
+                                                @News.AuthorNews
+                                                -
+                                                @News.Date
+                                            </span>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-left">@News.Title</h5>
+                                    <p class="card-text text-left">@News.ShorttextCard</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 class="ml-2 mb-4 mt-2">@Localizer["CategoryTitle"]</h2>
+    <div class="container">
+        <div class="row bg-body">
+            <div class="card-deck">
+                @foreach (var category in Model.Categories)
+                {
+                    <div class="col-md-4 d-flex align-items-stretch">
+                        <div class="card mb-4 shadow-lg">
+                            <a  class=" btn h-100 btn-fix card-block text-left" asp-controller="News" asp-action="List" asp-route-categoryId="@category.Id" asp-route-NewsPage="1">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">@category.Name</h5>
+                                    <p class="card-text text-left">@category.Desc</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+﻿@model NewsListViewModel
+
+<div class="container p-4 ">
+    <div class="shadow-lg p-5 ">
+        @foreach (var NewsInf in Model.News)
+        {
+
+            <h1 class="ml-3 mb-3 text-left ">@NewsInf.Title</h1>
+
+            <div class="bg-white text-left ml-3 mb-2">
+                <small class="text-muted ">
+                    <span>
+                        @NewsInf.AuthorNews
+                        -
+                        @NewsInf.Date
+                    </span>
+                </small>
+            </div>
+
+            <div class="text-center mb-4">
+                @if (@NewsInf.Img_Load != null)
+                {
+                    <img style="width: 900px; " class="rounded img-thumbnail" src="data:image/jpeg; base64,@Convert.ToBase64String(@NewsInf.Img_Load)" />
+                }
+                else
+                {
+                    <img src="@NewsInf.Img_Link" style="width: 900px; " class="rounded img-thumbnail"/>
+                }
+            </div>
+
+            @if (!String.IsNullOrEmpty(NewsInf.NewsIntroduction))
+            {
+                <p class="mx-5">
+                    @NewsInf.NewsIntroduction
+                </p>
+            }
+
+            @foreach (var NewsData in NewsInf.ListNewsDatas)
+            {
+                <h3 class="mx-5 mb-4 text-left ">@NewsData.Subtitle</h3>
+                @if (!String.IsNullOrEmpty(@NewsData.Img_Link))
+                {
+                    <div class="text-center mb-4">
+                        <img src="@NewsData.Img_Link" style="width: 900px; " class="rounded img-thumbnail"/>
+                    </div>
+                }
+                else if (@NewsData.Img_Load != null)
+                {
+                    <div class="text-center mb-4">
+                        <img style="width: 900px; " class="rounded img-thumbnail" src="data:image/jpeg; base64,@Convert.ToBase64String(NewsData.Img_Load)" />
+                    </div>
+                }
+                <p class="mx-5 text-left">
+                    @NewsData.Txt
+                </p>
+            }
+
+        }
+    </div>
+
+</div>

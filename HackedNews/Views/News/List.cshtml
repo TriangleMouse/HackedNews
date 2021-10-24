@@ -1,0 +1,45 @@
+﻿@model NewsListViewModel
+
+<div class="album py-3 bg-white">
+    <h2 class="ml-2 mb-4 mt-2">@Localizer["NewsTitleList"]</h2>
+    <div class="container">
+        <div class="row bg-body align-content-center">
+            @foreach (var News in Model.News)
+            {
+                <div class="col-md-6 d-flex align-items-stretch">
+                    <div class="card mb-4 shadow-lg">
+                        <a class=" btn h-100 btn-fix card-block text-left" asp-controller="News" asp-action="InfNews" asp-route-Newsid="@News.Id">
+
+                            <div class="container position-relative">
+                                @if (News.Img_Load != null)
+                                {
+                                    <img class="card-img-top" src="data:image/jpeg; base64,@Convert.ToBase64String(News.Img_Load)" />
+                                }
+                                else
+                                {
+                                    <img src="@News.Img_Link" class="card-img-top" />
+                                }
+                                <div class="bg-white text-right">
+                                    <small class="text-muted ">
+                                        <span>
+                                            @News.AuthorNews
+                                            -
+                                            @News.Date
+                                        </span>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <h5 class="card-title text-left">@News.Title</h5>
+                                <p class="card-text text-left">@News.ShorttextCard</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div  page-model="@Model.PagingInfo"  page-action="List"   page-classes-enabled="true" page-class="btn" page-class-normal="btn-light" page-class-selected="btn-primary" page-url-categoryId="@Model.CurrentCategory" class="btn-group pull-right m-1" ></div>

@@ -1,0 +1,11 @@
+﻿@using HackedNews
+@using HackedNews.Data.Models.NewsModel
+@using HackedNews.Data.Models.AccountModel
+@using HackedNews.ViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper HackedNews.Infrastructure.*, HackedNews
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
