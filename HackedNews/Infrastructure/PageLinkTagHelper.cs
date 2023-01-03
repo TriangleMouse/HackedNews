@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using HackedNews.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using HackedNews.ViewModels;
+
 namespace HackedNews.Infrastructure
 {
     [HtmlTargetElement("div", Attributes = "page-model")]
@@ -17,13 +15,12 @@ namespace HackedNews.Infrastructure
 
         public PageLinkTagHelper(IUrlHelperFactory helperFactory)
         {
-            this.urlHelperFactory = helperFactory;
+            urlHelperFactory = helperFactory;
         }
 
 
-        [ViewContext]
-        [HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
+        [ViewContext] [HtmlAttributeNotBound] public ViewContext ViewContext { get; set; }
+
         public PagingInfo PageModel { get; set; }
         public string PageAction { get; set; }
 
@@ -35,13 +32,14 @@ namespace HackedNews.Infrastructure
 
         [HtmlAttributeName(DictionaryAttributePrefix = "page-url-")]
         public Dictionary<string, object> PageUrlValues { get; set; } = new Dictionary<string, object>();
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
-            TagBuilder result = new TagBuilder("div");
-            for (int i = 1; i <= PageModel.TotalPages; i++)
+            var urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+            var result = new TagBuilder("div");
+            for (var i = 1; i <= PageModel.TotalPages; i++)
             {
-                TagBuilder tag = new TagBuilder("a");
+                var tag = new TagBuilder("a");
                 PageUrlValues["newsPage"] = i;
                 tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
                 if (PageClassesEnabled)
@@ -49,6 +47,7 @@ namespace HackedNews.Infrastructure
                     tag.AddCssClass(PageClass);
                     tag.AddCssClass(i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
                 }
+
                 tag.InnerHtml.Append(i.ToString());
                 result.InnerHtml.AppendHtml(tag);
             }
@@ -56,6 +55,4 @@ namespace HackedNews.Infrastructure
             output.Content.AppendHtml(result.InnerHtml);
         }
     }
-
-
 }

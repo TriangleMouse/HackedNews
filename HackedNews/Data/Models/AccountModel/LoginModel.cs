@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HackedNews.Data.Models.AccountModel
 {
@@ -11,9 +7,11 @@ namespace HackedNews.Data.Models.AccountModel
         [Required(ErrorMessage = "EmailTxt")]
         [EmailAddress]
         public string Name { get; set; }
+
         [Required(ErrorMessage = "PasswordTxt")]
         [UIHint("password")]
         public string Password { get; set; }
+
         public string ReturnUrl { get; set; }
     }
 }

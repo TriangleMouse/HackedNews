@@ -1,5 +1,3 @@
-using System;
-
 namespace HackedNews.ViewModels
 {
     public class ErrorViewModel

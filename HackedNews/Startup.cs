@@ -1,38 +1,37 @@
+using System.Globalization;
+using HackedNews.Data;
+using HackedNews.Data.Interfaces;
+using HackedNews.Data.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Localization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using HackedNews.Data;
-using HackedNews.Data.Repository;
-using HackedNews.Data.Models.NewsModel;
-using HackedNews.Data.Interfaces;
-using System.Globalization;
-using Microsoft.AspNetCore.Identity;
 
 namespace HackedNews
 {
     public class Startup
     {
-        public Startup(IHostEnvironment hostEnv) => this.Configuration = new ConfigurationBuilder().SetBasePath(hostEnv.ContentRootPath).AddJsonFile("dbsettings.json").Build();
+        public Startup(IHostEnvironment hostEnv)
+        {
+            Configuration = new ConfigurationBuilder().SetBasePath(hostEnv.ContentRootPath)
+                .AddJsonFile("dbsettings.json").Build();
+        }
 
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HackedNews:DefaultConnection")));
+            services.AddDbContext<AppDBContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("HackedNews:DefaultConnection")));
 
-            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HackedNewsIdentity:DefaultConnection")));
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("HackedNewsIdentity:DefaultConnection")));
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddDefaultTokenProviders();
 
 
             services.AddTransient<IAllNews, NewsRepository>();
@@ -52,17 +51,15 @@ namespace HackedNews
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
             });
-        
-            services.AddMvc();
 
+            services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            { 
+            {
                 app.UseDeveloperExceptionPage().UseStatusCodePages();
-               
             }
             else
             {
@@ -72,37 +69,38 @@ namespace HackedNews
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRequestLocalization();//поддержка локализации
+            app.UseRequestLocalization(); //поддержка локализации
             app.UseRouting();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(
-                endpoints => {
+                endpoints =>
+                {
                     endpoints.MapControllerRoute(
-                           name: null,
-                           pattern: "News{NewsPage:int}",
-                           defaults: new { controller = "News", action = "InfNews" });
+                        null,
+                        "News{NewsPage:int}",
+                        new { controller = "News", action = "InfNews" });
                     endpoints.MapControllerRoute(
-                           name: null,
-                           pattern: "{categoryId}/Page{NewsPage:int}",
-                           defaults: new { controller = "News", action = "List" });
+                        null,
+                        "{categoryId}/Page{NewsPage:int}",
+                        new { controller = "News", action = "List" });
                     endpoints.MapControllerRoute(
-                           name: null,
-                           pattern: "Page{NewsPage:int}",
-                           defaults: new { controller = "News", action = "List", NewsPage = 1 });
+                        null,
+                        "Page{NewsPage:int}",
+                        new { controller = "News", action = "List", NewsPage = 1 });
                     endpoints.MapControllerRoute(
-                           name: null,
-                           pattern: "{categoryId}",
-                           defaults: new { controller = "News", action = "List", NewsPage = 1 });
+                        null,
+                        "{categoryId}",
+                        new { controller = "News", action = "List", NewsPage = 1 });
                     endpoints.MapControllerRoute(
-                           name: null,
-                           pattern: "{controller=Home}/{action=Index}/{id?}"
-                           );
+                        null,
+                        "{controller=Home}/{action=Index}/{id?}"
+                    );
                 });
 
-            
+
             SeedData.EnsurePopulated(app);
             IdentitySeedData.EnsurePopulated(app);
         }

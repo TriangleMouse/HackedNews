@@ -1,42 +1,44 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width"/>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <title>@ViewBag.Title</title>
     <style>
         .input-validation-error {
-            border-color: red;
             background-color: #fee;
+            border-color: red;
         }
     </style>
-    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet"/>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" style="color:whitesmoke">HackedNews</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" style="color: whitesmoke">HackedNews</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <div class="collapse navbar-collapse" id="navbarsExample07">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["HomeBtn"] <span class="sr-only">(current)</span></a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="collapse navbar-collapse" id="navbarsExample07">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                            @Localizer["HomeBtn"] <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
-    <div class="container wrapper flex-grow-1">
-        <main role="main" class="pb-3" style="min-height: 100%">
-            @*<div class="bg-info p-2 row">
+        </div>
+    </nav>
+</header>
+<div class="container wrapper flex-grow-1">
+    <main role="main" class="pb-3" style="min-height: 100%">
+        @*<div class="bg-info p-2 row">
             <div class="col">
                 <h4>@ViewBag.Title</h4>
             </div>
@@ -45,34 +47,34 @@
             </div>
         </div>*@
 
-            @*Располагаем здесь, чтобы не плодить подобные решение, если появятся новые представления для администрирования*@
+        @*Располагаем здесь, чтобы не плодить подобные решение, если появятся новые представления для администрирования*@
 
-            @if (TempData["message"] != null)
-            {
-                <div class="alert alert-success">@TempData["message"]</div>
-            }
-            else if (TempData["err_message"] != null)
-            {
-                <div class="alert alert-warning">@TempData["err_message"]</div>
-            }
-            @RenderBody()
-        </main>
-    </div>
-    <footer class="border-top pt-4 text-muted" style="line-height: 45px">
-        <div class="container">
-            <div class="row offset-md-2">
-                <div class="col-4 col-md-5">
-                    <h5>@Localizer["ContactsText"]</h5>
-                    <ul class="list-unstyled text-small">
-                        <li>Email: <a class="text-muted" href="mailto:artem_74@tut.by">artem_74@tut.by</a></li>
-                        <li>Telegram: <a class="text-muted" href="https://t.me/TriangleMouse">Артем</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    &copy; 2021 - HackedNews - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                </div>
+        @if (TempData["message"] != null)
+        {
+            <div class="alert alert-success">@TempData["message"]</div>
+        }
+        else if (TempData["err_message"] != null)
+        {
+            <div class="alert alert-warning">@TempData["err_message"]</div>
+        }
+        @RenderBody()
+    </main>
+</div>
+<footer class="border-top pt-4 text-muted" style="line-height: 45px">
+    <div class="container">
+        <div class="row offset-md-2">
+            <div class="col-4 col-md-5">
+                <h5>@Localizer["ContactsText"]</h5>
+                <ul class="list-unstyled text-small">
+                    <li>Email: <a class="text-muted" href="mailto:artem_74@tut.by">artem_74@tut.by</a></li>
+                    <li>Telegram: <a class="text-muted" href="https://t.me/TriangleMouse">Артем</a></li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                &copy; 2021 - HackedNews - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
 </body>
 </html>

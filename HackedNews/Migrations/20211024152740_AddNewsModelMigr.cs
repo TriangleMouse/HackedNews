@@ -75,7 +75,7 @@ namespace HackedNews.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_News_CategoryID",
                 table: "News",
-                column: "CategoryID");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NewsData_NewsId",

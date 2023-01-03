@@ -1,25 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using HackedNews.Data.Models.AccountModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SportsStore.Controllers
 {
-    
     public class AccountController : Controller
     {
-        private UserManager<IdentityUser> userManager;
-        private SignInManager<IdentityUser> signInManager;
+        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<IdentityUser> userManager;
 
         public AccountController(UserManager<IdentityUser> userMgr, SignInManager<IdentityUser> signIn)
         {
-            this.userManager = userMgr;
-            this.signInManager=signIn;
+            userManager = userMgr;
+            signInManager = signIn;
         }
 
         [Authorize]
@@ -28,7 +23,7 @@ namespace SportsStore.Controllers
         {
             return View(new LoginModel
             {
-                ReturnUrl=returnUrl
+                ReturnUrl = returnUrl
             });
         }
 
@@ -40,22 +35,20 @@ namespace SportsStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = await userManager.FindByNameAsync(loginModel.Name);
+                var user = await userManager.FindByNameAsync(loginModel.Name);
                 if (user != null)
                 {
                     await signInManager.SignOutAsync();
-                    if((await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded)
-                    {
+                    if ((await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded)
                         return Redirect(loginModel?.ReturnUrl ?? "/Home/Index");
-                    }
                 }
             }
 
-            ModelState.AddModelError("","Invalid name or password");
+            ModelState.AddModelError("", "Invalid name or password");
             return View(loginModel);
         }
 
-        public async Task<RedirectResult> Logout(string returnUrl="/")
+        public async Task<RedirectResult> Logout(string returnUrl = "/")
         {
             await signInManager.SignOutAsync();
             return Redirect(returnUrl);
@@ -66,12 +59,13 @@ namespace SportsStore.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = new IdentityUser { Email = model.Email, UserName = model.Email};
+                var user = new IdentityUser { Email = model.Email, UserName = model.Email };
                 // добавляем пользователя
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -80,14 +74,10 @@ namespace SportsStore.Controllers
                     await signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
+
+                foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
             }
+
             return View(model);
         }
     }

@@ -14,15 +14,15 @@
                         <div class="card mb-4 shadow-lg">
                             <a class=" btn h-100 btn-fix card-block text-left" asp-controller="News" asp-action="InfNews" asp-route-Newsid="@News.Id">
                                 <div class="container position-relative">
-                                    @if (News.Img_Load != null)
-                                     {
-                                           <img class="card-img-top" src= " data:image/jpeg; base64,@Convert.ToBase64String(News.Img_Load)" />
+                                    @if (News.ImgLoad != null)
+                                    {
+                                        <img class="card-img-top" src=" data:image/jpeg; base64,@Convert.ToBase64String(News.ImgLoad)"/>
                                     }
                                     else
                                     {
-                                        <img src="@News.Img_Link" class="card-img-top"/>
+                                        <img src="@News.ImgLink" class="card-img-top"/>
                                     }
-                                    
+
                                     <div class="bg-white text-right">
                                         <small class="text-muted ">
                                             <span>
@@ -55,7 +55,7 @@
                 {
                     <div class="col-md-4 d-flex align-items-stretch">
                         <div class="card mb-4 shadow-lg">
-                            <a  class=" btn h-100 btn-fix card-block text-left" asp-controller="News" asp-action="List" asp-route-categoryId="@category.Id" asp-route-NewsPage="1">
+                            <a class=" btn h-100 btn-fix card-block text-left" asp-controller="News" asp-action="List" asp-route-categoryId="@category.Id" asp-route-NewsPage="1">
                                 <div class="card-body">
                                     <h5 class="card-title text-center">@category.Name</h5>
                                     <p class="card-text text-left">@category.Desc</p>

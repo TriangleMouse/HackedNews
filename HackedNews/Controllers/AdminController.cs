@@ -1,60 +1,56 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using HackedNews.ViewModels;
-using HackedNews.Data.Repository;
 using HackedNews.Data.Interfaces;
 using HackedNews.Data.Models.NewsModel;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.IO;
-using Microsoft.Extensions.Localization;
-using Microsoft.AspNetCore.Authorization;
+using HackedNews.ViewModels;
 using Korzh.EasyQuery.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 
 namespace HackedNews.Controllers
 {
     [Authorize]
     public class AdminController : Controller
     {
-        private IAllNews allNews;
-        private INewsCategory category;
-        private SelectList categor;
         private readonly IStringLocalizer<AdminController> _localizer;
+        private readonly IAllNews allNews;
+        private readonly SelectList categor;
+        private readonly INewsCategory category;
 
-        public AdminController(IAllNews news,INewsCategory newsCategory, IStringLocalizer<AdminController> localizer)
+        public AdminController(IAllNews news, INewsCategory newsCategory, IStringLocalizer<AdminController> localizer)
         {
-            this.allNews = news;
-            this.category = newsCategory;
-            this._localizer = localizer;
+            allNews = news;
+            category = newsCategory;
+            _localizer = localizer;
             categor = new SelectList(category.AllCategories, "Id", "Name");
         }
 
 
-        public ActionResult Index() => View(
+        public ActionResult Index()
+        {
+            return View(
                 new NewsViewModels
                 {
-                    News=allNews.News.AsQueryable()
+                    News = allNews.News.AsQueryable()
                 }
             );
+        }
 
         [HttpPost]
         public ActionResult Index(NewsViewModels model)
         {
             if (!string.IsNullOrEmpty(model.Text))
-            {
                 model.News = allNews.News.AsQueryable().FullTextSearchQuery(model.Text);
-            }
             else
-            {
                 model.News = allNews.News.AsQueryable();
-            }
             return View(model);
         }
 
-        public ActionResult Edit(int newsId) {
+        public ActionResult Edit(int newsId)
+        {
             ViewBag.Categories = categor;
             return View(allNews.News.FirstOrDefault(p => p.Id == newsId));
         }
@@ -72,10 +68,9 @@ namespace HackedNews.Controllers
         [HttpPost]
         public ActionResult AddSubTopics(News news)
         {
-             if (ModelState.IsValid)
-             {
-                news.ListNewsDatas.Add(new NewsData { Subtitle = "", Img_Link = "", Txt = "",Img_Load=null,Switch_Load_Img=false});
-             }
+            if (ModelState.IsValid)
+                news.ListNewsDatas.Add(new NewsData
+                    { Subtitle = "", ImgLink = "", Txt = "", ImgLoad = null, SwitchLoadImg = false });
             ViewBag.Categories = categor;
             return View("Edit", news);
         }
@@ -89,6 +84,7 @@ namespace HackedNews.Controllers
                 ViewBag.Categories = categor;
                 news.ListNewsDatas.Remove(news.ListNewsDatas.Last());
             }
+
             ViewBag.Categories = categor;
             return View("Edit", news);
         }
@@ -96,7 +92,6 @@ namespace HackedNews.Controllers
 
         private byte[] GetMassBinary(IFormFile img)
         {
-
             byte[] imageData = null;
             try
             {
@@ -109,27 +104,27 @@ namespace HackedNews.Controllers
             catch
             {
                 imageData = null;
-                TempData["err_message"] =_localizer["ErrReaderImg"]+img.FileName;
+                TempData["err_message"] = _localizer["ErrReaderImg"] + img.FileName;
             }
-            
-            return imageData;   
+
+            return imageData;
         }
 
         [HttpPost]
         public IActionResult Edit(News news)
         {
-            bool err = false;
-            bool not_get_img_err = false;// проверка только для превью на главной страницы
+            var err = false;
+            var not_get_img_err = false; // проверка только для превью на главной страницы
             link:
             //Смог ли процесс привязки модели проверить достоверность отправленных пользователем данных
             if (ModelState.IsValid && !not_get_img_err && !err)
             {
                 if (news.File != null)
                 {
-                    news.Img_Load = GetMassBinary(news.File);
-                    if (news.Img_Load != null)
+                    news.ImgLoad = GetMassBinary(news.File);
+                    if (news.ImgLoad != null)
                     {
-                        news.Img_Link = null;
+                        news.ImgLink = null;
                         news.File = null;
                     }
                     else
@@ -138,23 +133,21 @@ namespace HackedNews.Controllers
                         goto link;
                     }
                 }
-                else if(news.File == null && news.Img_Link==null) {
+                else if (news.File == null && news.ImgLink == null)
+                {
                     not_get_img_err = true;
-                    TempData["err_message"] = _localizer["NotGetPreview"] ;
+                    TempData["err_message"] = _localizer["NotGetPreview"];
                     goto link;
                 }
 
-                if (news.ListNewsDatas.Where(p=>p.File!=null).Count()>0)
-                {
+                if (news.ListNewsDatas.Where(p => p.File != null).Count() > 0)
                     foreach (var item in news.ListNewsDatas)
-                    {
-
                         if (item.File != null)
                         {
-                            item.Img_Load = GetMassBinary(item.File);
-                            if (item.Img_Load != null)
+                            item.ImgLoad = GetMassBinary(item.File);
+                            if (item.ImgLoad != null)
                             {
-                                item.Img_Link = null;
+                                item.ImgLink = null;
                                 item.File = null;
                             }
                             else
@@ -163,20 +156,15 @@ namespace HackedNews.Controllers
                                 goto link;
                             }
                         }
-                    }
-                }
 
                 allNews.SaveNews(news);
-                TempData["message"] = news.Title+" "+_localizer["SaveNews"];
+                TempData["message"] = news.Title + " " + _localizer["SaveNews"];
                 return RedirectToAction("Index");
+            }
 
-            }
-            else
-            {
-                ViewBag.Categories = categor;
-                //Что-то не так со значениями данных
-                return View(news);
-            }
+            ViewBag.Categories = categor;
+            //Что-то не так со значениями данных
+            return View(news);
         }
 
         public ActionResult Create()
@@ -189,13 +177,9 @@ namespace HackedNews.Controllers
         [HttpPost]
         public IActionResult Delete(int newsId)
         {
-            News deletedNews = allNews.DeleteNews(newsId);
-            if (deletedNews != null)
-            {
-                TempData["message"] = deletedNews.Title + " " + _localizer["DeletedNews"];
-            }
+            var deletedNews = allNews.DeleteNews(newsId);
+            if (deletedNews != null) TempData["message"] = deletedNews.Title + " " + _localizer["DeletedNews"];
             return RedirectToAction("Index");
         }
-
     }
 }

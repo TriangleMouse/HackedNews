@@ -4,7 +4,6 @@
     <div class="shadow-lg p-5 ">
         @foreach (var NewsInf in Model.News)
         {
-
             <h1 class="ml-3 mb-3 text-left ">@NewsInf.Title</h1>
 
             <div class="bg-white text-left ml-3 mb-2">
@@ -18,17 +17,17 @@
             </div>
 
             <div class="text-center mb-4">
-                @if (@NewsInf.Img_Load != null)
+                @if (NewsInf.ImgLoad != null)
                 {
-                    <img style="width: 900px; " class="rounded img-thumbnail" src="data:image/jpeg; base64,@Convert.ToBase64String(@NewsInf.Img_Load)" />
+                    <img style="width: 900px;" class="rounded img-thumbnail" src="data:image/jpeg; base64,@Convert.ToBase64String(NewsInf.ImgLoad)"/>
                 }
                 else
                 {
-                    <img src="@NewsInf.Img_Link" style="width: 900px; " class="rounded img-thumbnail"/>
+                    <img src="@NewsInf.ImgLink" style="width: 900px;" class="rounded img-thumbnail"/>
                 }
             </div>
 
-            @if (!String.IsNullOrEmpty(NewsInf.NewsIntroduction))
+            @if (!string.IsNullOrEmpty(NewsInf.NewsIntroduction))
             {
                 <p class="mx-5">
                     @NewsInf.NewsIntroduction
@@ -38,23 +37,22 @@
             @foreach (var NewsData in NewsInf.ListNewsDatas)
             {
                 <h3 class="mx-5 mb-4 text-left ">@NewsData.Subtitle</h3>
-                @if (!String.IsNullOrEmpty(@NewsData.Img_Link))
+                @if (!string.IsNullOrEmpty(NewsData.ImgLink))
                 {
                     <div class="text-center mb-4">
-                        <img src="@NewsData.Img_Link" style="width: 900px; " class="rounded img-thumbnail"/>
+                        <img src="@NewsData.ImgLink" style="width: 900px;" class="rounded img-thumbnail"/>
                     </div>
                 }
-                else if (@NewsData.Img_Load != null)
+                else if (NewsData.ImgLoad != null)
                 {
                     <div class="text-center mb-4">
-                        <img style="width: 900px; " class="rounded img-thumbnail" src="data:image/jpeg; base64,@Convert.ToBase64String(NewsData.Img_Load)" />
+                        <img style="width: 900px;" class="rounded img-thumbnail" src="data:image/jpeg; base64,@Convert.ToBase64String(NewsData.ImgLoad)"/>
                     </div>
                 }
                 <p class="mx-5 text-left">
                     @NewsData.Txt
                 </p>
             }
-
         }
     </div>
 

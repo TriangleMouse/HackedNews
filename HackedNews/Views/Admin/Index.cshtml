@@ -7,7 +7,7 @@
 }
 
 <form method="post" asp-action="Index">
-    <div class="row form-group my-3" >
+    <div class="row form-group my-3">
         <div class="col-md-4">
             <input asp-for="Text" class="form-control" type="text" placeholder="Search" aria-label="Search">
         </div>
@@ -39,7 +39,7 @@
                     <a asp-action="Edit" class="btn btn-sm btn-warning" asp-route-newsId="@item.Id">
                         @Localizer["EditBtn"]
                     </a>
-                    <input type="hidden" name="newsId" value="@item.Id" />
+                    <input type="hidden" name="newsId" value="@item.Id"/>
                     <button type="submit" class="btn btn-danger btn-sm">
                         @Localizer["DeleteBtn"]
                     </button>
