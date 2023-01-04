@@ -51,9 +51,9 @@ namespace HackedNews.Data
             }
         }
 
-        private static int GetCategoryId(string CategoryName, AppDBContext context)
+        private static int GetCategoryId(string categoryName, AppDBContext context)
         {
-            return context.Category.FirstOrDefault(p => p.Name == CategoryName).Id;
+            return context.Category.FirstOrDefault(p => p.Name.Equals(categoryName)).Id;
         }
 
         public static void EnsurePopulated(IApplicationBuilder app)

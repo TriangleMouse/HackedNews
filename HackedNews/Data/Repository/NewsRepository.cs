@@ -16,7 +16,10 @@ namespace HackedNews.Data.Repository
             appDBContext = appDBContent;
         }
 
-        public IEnumerable<News> News => appDBContext.News.Include(c => c.Category).Include(d => d.ListNewsDatas);
+        public IEnumerable<News> News => appDBContext.News
+            .Include(news => news.Category)
+            .Include(news => news.CommentList)
+            .Include(news => news.ListNewsDatas);
 
 
         public void SaveNews(News news)

@@ -16,16 +16,14 @@ namespace HackedNews.Controllers
     public class AdminController : Controller
     {
         private readonly IStringLocalizer<AdminController> _localizer;
-        private readonly IAllNews allNews;
-        private readonly SelectList categor;
-        private readonly INewsCategory category;
+        private readonly IAllNews _allNews;
+        private readonly SelectList _category;
 
         public AdminController(IAllNews news, INewsCategory newsCategory, IStringLocalizer<AdminController> localizer)
         {
-            allNews = news;
-            category = newsCategory;
+            _allNews = news;
             _localizer = localizer;
-            categor = new SelectList(category.AllCategories, "Id", "Name");
+            _category = new SelectList(newsCategory.AllCategories, "Id", "Name");
         }
 
 
@@ -34,7 +32,7 @@ namespace HackedNews.Controllers
             return View(
                 new NewsViewModels
                 {
-                    News = allNews.News.AsQueryable()
+                    News = _allNews.News.AsQueryable()
                 }
             );
         }
@@ -43,23 +41,23 @@ namespace HackedNews.Controllers
         public ActionResult Index(NewsViewModels model)
         {
             if (!string.IsNullOrEmpty(model.Text))
-                model.News = allNews.News.AsQueryable().FullTextSearchQuery(model.Text);
+                model.News = _allNews.News.AsQueryable().FullTextSearchQuery(model.Text);
             else
-                model.News = allNews.News.AsQueryable();
+                model.News = _allNews.News.AsQueryable();
             return View(model);
         }
 
         public ActionResult Edit(int newsId)
         {
-            ViewBag.Categories = categor;
-            return View(allNews.News.FirstOrDefault(p => p.Id == newsId));
+            ViewBag.Categories = _category;
+            return View(_allNews.News.FirstOrDefault(p => p.Id == newsId));
         }
 
 
         [HttpPost]
         public ActionResult SwitchImgLoad(News news)
         {
-            ViewBag.Categories = categor;
+            ViewBag.Categories = _category;
             return View("Edit", news);
         }
 
@@ -71,7 +69,7 @@ namespace HackedNews.Controllers
             if (ModelState.IsValid)
                 news.ListNewsDatas.Add(new NewsData
                     { Subtitle = "", ImgLink = "", Txt = "", ImgLoad = null, SwitchLoadImg = false });
-            ViewBag.Categories = categor;
+            ViewBag.Categories = _category;
             return View("Edit", news);
         }
 
@@ -81,11 +79,11 @@ namespace HackedNews.Controllers
         {
             if (ModelState.IsValid)
             {
-                ViewBag.Categories = categor;
+                ViewBag.Categories = _category;
                 news.ListNewsDatas.Remove(news.ListNewsDatas.Last());
             }
 
-            ViewBag.Categories = categor;
+            ViewBag.Categories = _category;
             return View("Edit", news);
         }
 
@@ -113,6 +111,7 @@ namespace HackedNews.Controllers
         [HttpPost]
         public IActionResult Edit(News news)
         {
+            // todo отрефакторить булщитный код написанный много лет назад на скорости из-за дедлайна(goto осуждаю)
             var err = false;
             var not_get_img_err = false; // проверка только для превью на главной страницы
             link:
@@ -157,19 +156,19 @@ namespace HackedNews.Controllers
                             }
                         }
 
-                allNews.SaveNews(news);
+                _allNews.SaveNews(news);
                 TempData["message"] = news.Title + " " + _localizer["SaveNews"];
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Categories = categor;
+            ViewBag.Categories = _category;
             //Что-то не так со значениями данных
             return View(news);
         }
 
         public ActionResult Create()
         {
-            ViewBag.Categories = categor;
+            ViewBag.Categories = _category;
             return View("Edit", new News());
         }
 
@@ -177,7 +176,7 @@ namespace HackedNews.Controllers
         [HttpPost]
         public IActionResult Delete(int newsId)
         {
-            var deletedNews = allNews.DeleteNews(newsId);
+            var deletedNews = _allNews.DeleteNews(newsId);
             if (deletedNews != null) TempData["message"] = deletedNews.Title + " " + _localizer["DeletedNews"];
             return RedirectToAction("Index");
         }

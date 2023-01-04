@@ -31,18 +31,20 @@ namespace HackedNews.Controllers
                     ItemsPerPage = PageSize,
                     TotalItems = categoryId == null
                         ? allNews.News.Count()
-                        : allNews.News.Where(p => p.CategoryId == categoryId).Count()
+                        : allNews.News.Count(news => news.CategoryId == categoryId)
                 },
                 CurrentCategory = categoryId
             });
         }
 
-        public ActionResult InfNews(int? Newsid)
+        public ActionResult InfNews(int? newsId)
         {
+            var news = allNews.News.Where(news => news.Id == newsId);
+
             return View(
                 new NewsListViewModel
                 {
-                    News = allNews.News.Where(p => p.Id == Newsid)
+                    News = allNews.News.Where(news => news.Id == newsId)
                 }
             );
         }

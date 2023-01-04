@@ -27,12 +27,10 @@ namespace HackedNews
         {
             services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("HackedNews:DefaultConnection")));
-
-            services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("HackedNewsIdentity:DefaultConnection")));
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>()
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>()
                 .AddDefaultTokenProviders();
-
+            //services.AddDbContext<AppIdentityDbContext>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("HackedNewsIdentity:DefaultConnection")));
 
             services.AddTransient<IAllNews, NewsRepository>();
             services.AddTransient<INewsCategory, CategoryRepository>();
