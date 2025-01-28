@@ -4,9 +4,6 @@ Features: Create, edit, delete, view news.
 Implemented mechanics in the site: Pagination, Data Validation, Search, Authorization, Registration. 
 Technologies used: ASP.Net Core,Bootstrap,Html5,Css3,jQuery(for validation)
 
-
-Если у Вас возникли проблемы с библиотекой Korzh.EasyQuery.Linq, тогда ее необходимо установить через NuGet.
-
 Я использовал СУБД Sql Server. 
 Необходимо будет смигрировать имеющиеся:
 EntityFrameworkCore\Update-DataBase -context AppDbContext
